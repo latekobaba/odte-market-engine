@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "OptionTrade.h"
+#include "MarketDataEngine.h"
 
 
 int main() {
@@ -43,6 +44,33 @@ int main() {
         551.20
     );
 
+    MarketDataEngine engine;
+    for (const OptionTrade& t : trades) {
+        engine.addTrade(t);
+    }
+
+    std::cout << "Engine Trade Count: "
+          << engine.getTradeCount() << '\n';
+
+    std::cout << "Engine Total Volume: "
+          << engine.getTotalVolume() << '\n';
+
+    std::cout << "Engine Total Notional: "
+              << engine.getTotalNotional() << '\n';
+
+    std::cout << "Engine Call Volume: "
+              << engine.getCallVolume() << '\n';
+
+    std::cout << "Engine Put Volume: "
+              << engine.getPutVolume() << '\n';
+
+    std::cout << "Engine VWAP: "
+              << engine.getVWAP() << '\n';
+
+    std::cout << "Engine Put/Call Ratio: "
+          << engine.getPutCallRatio() << '\n';
+
+
 
 #ifdef __linux__
     std::cout << "Platform: Linux\n";
@@ -51,30 +79,9 @@ int main() {
 #endif
 
 
-    // aggregation variables:
-    int totalVolume = 0;
-    double totalNotional = 0.0;
-    int callVolume = 0;
-    int putVolume = 0;
-    double totalPriceVolume = 0.0;
-    int tradeCount = 0;
-
     // loop through the vector
     for (const OptionTrade& t : trades) {
 
-        totalVolume += t.getSize();
-        totalNotional += t.getNotional();
-
-        if (t.getOptionType() == 'C') {
-            callVolume += t.getSize();
-        }
-        else if (t.getOptionType() == 'P') {
-            putVolume += t.getSize();
-        }
-
-        totalPriceVolume += t.getPrice() * t.getSize();
-
-        tradeCount++;
 
         std::cout << "\nTrade\n";
         std::cout << "Symbol: " << t.getSymbol() << '\n';
@@ -86,28 +93,6 @@ int main() {
         std::cout << "Notional: " << t.getNotional() << '\n';
 
     }
-
-    std::cout << "\nTotal Volume: " << totalVolume << '\n';
-    std::cout << "Total Notional: " << totalNotional << '\n';
-
-    std::cout << "Call Volume: " << callVolume << '\n';
-    std::cout << "Put Volume: " << putVolume << '\n';
-
-    double putCallRatio = 0.0;
-    if (callVolume != 0) {
-        putCallRatio =
-            static_cast<double>(putVolume) / callVolume;
-
-    }
-    std::cout << "Put/Call Volume Ratio: " << putCallRatio << '\n';
-
-    double vwap = 0.0;
-    if (totalVolume != 0) {
-        vwap = totalPriceVolume / totalVolume;
-    }
-    std::cout << "VWAP: " << vwap << '\n';
-
-    std::cout << "Trade Count: " << tradeCount << '\n';
 
     return 0;
 }

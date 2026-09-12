@@ -9,6 +9,7 @@ add_executable(
         odte_market_engine
         src/main.cpp
         src/OptionTrade.cpp
+        src/MarketDataEngine.cpp
 )
 
 target_include_directories(
