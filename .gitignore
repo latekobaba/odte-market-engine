@@ -5,3 +5,4 @@ build/
 *.out
 *.exe
 .DS_Store
+learning-notes/
