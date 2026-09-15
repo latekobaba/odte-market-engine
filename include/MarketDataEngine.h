@@ -4,6 +4,7 @@
 
 
 #include <vector>
+#include <cstddef>
 #include "OptionTrade.h"
 
 
@@ -11,6 +12,8 @@ class MarketDataEngine {
 
 public:
     void addTrade(const OptionTrade& trade);
+    void reserve(std::size_t capacity);
+
 
     int getTradeCount() const;
     int getTotalVolume() const;

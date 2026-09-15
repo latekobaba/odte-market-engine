@@ -5,11 +5,18 @@ project(odte_market_engine)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 add_executable(
         odte_market_engine
         src/main.cpp
         src/OptionTrade.cpp
+        src/ETFTrade.cpp
+        src/ETFTradeParser.cpp
         src/MarketDataEngine.cpp
+        include/ETFBar.h
+        src/ETFBar.cpp
+        include/ETFBarAggregator.h
+        src/ETFBarAggregator.cpp
 )
 
 target_include_directories(

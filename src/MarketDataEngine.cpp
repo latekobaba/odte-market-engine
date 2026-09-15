@@ -79,3 +79,7 @@ double MarketDataEngine::getPutCallRatio() const {
 
     return static_cast<double>(putVolume) / callVolume;
 }
+
+void MarketDataEngine::reserve(std::size_t capacity) {
+    trades.reserve(capacity);
+}

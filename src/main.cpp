@@ -4,7 +4,8 @@
 #include <vector>
 #include "OptionTrade.h"
 #include "MarketDataEngine.h"
-
+#include "ETFTradeParser.h"
+#include "../include/ETFBarAggregator.h"
 
 int main() {
     OptionTrade trade(
@@ -44,7 +45,12 @@ int main() {
         551.20
     );
 
+
     MarketDataEngine engine;
+
+    engine.reserve(3);
+
+
     for (const OptionTrade& t : trades) {
         engine.addTrade(t);
     }
@@ -92,6 +98,47 @@ int main() {
         std::cout << "Moneyness: " << t.getMoneyness() << '\n';
         std::cout << "Notional: " << t.getNotional() << '\n';
 
+    }
+
+    ETFTradeParser parser;
+
+    std::vector<ETFTrade> etfTrades =
+        parser.parseFile("data/etf_trades_test.csv");
+
+    std::cout << "\nParsed ETF Trades: " << etfTrades.size() << '\n';
+
+
+    for (const ETFTrade& trade : etfTrades) {
+        trade.print();
+        std::cout << '\n';
+    }
+
+    ETFBarAggregator aggregator;
+
+    std::vector<ETFBar> bars =
+        aggregator.aggregate(etfTrades);
+
+    std::cout << "\n5-Minute ETF Bars: "
+              << bars.size()
+              << "\n\n";
+
+    for (const ETFBar& bar : bars) {
+        bar.print();
+        std::cout << '\n';
+    }
+
+
+    std::cout << "\nETF 5-Minute Return Series:\n";
+
+    for (std::size_t i = 1; i < bars.size(); ++i) {
+
+        double etfReturn =
+            bars[i].getReturn(bars[i - 1]);
+
+        std::cout << "Interval " << i
+                  << " Return: "
+                  << etfReturn
+                  << '\n';
     }
 
     return 0;
