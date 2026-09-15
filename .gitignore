@@ -6,3 +6,4 @@ build/
 *.exe
 .DS_Store
 learning-notes/
+data/etf_trades_large.csv

@@ -20,41 +20,57 @@ std::vector<ETFTrade> ETFTradeParser::parseFile(const std::string& filePath)
     std::getline(file, line);
 
     while (std::getline(file, line)) {
+        if (line.empty()) {
+            continue;
+        }
+
         std::stringstream ss(line);
 
         std::string timestampStr;
-        std::getline(ss, timestampStr, ',');
-        long long timestamp = std::stoll(timestampStr);
-
         std::string symbol;
-        std::getline(ss, symbol, ',');
-
         std::string priceStr;
-        std::getline(ss, priceStr, ',');
-        double price = std::stod(priceStr);
-
         std::string sizeStr;
-        std::getline(ss, sizeStr, ',');
-        int size = std::stoi(sizeStr);
-
         std::string sideStr;
-        std::getline(ss, sideStr, ',');
-        char side = sideStr[0];
-
         std::string sequenceStr;
+
+        // Read all six fields first
+        std::getline(ss, timestampStr, ',');
+        std::getline(ss, symbol, ',');
+        std::getline(ss, priceStr, ',');
+        std::getline(ss, sizeStr, ',');
+        std::getline(ss, sideStr, ',');
         std::getline(ss, sequenceStr);
-        long long sequence = std::stoll(sequenceStr);
 
-        trades.emplace_back(
-            timestamp,
-            symbol,
-            price,
-            size,
-            side,
-            sequence
-        );
+        // Make sure none of the six fields is empty
+        if (timestampStr.empty() ||
+            symbol.empty() ||
+            priceStr.empty() ||
+            sizeStr.empty() ||
+            sideStr.empty() ||
+            sequenceStr.empty()) {
+
+            continue;
+            }
+
+        try {
+            long long timestamp = std::stoll(timestampStr);
+            double price = std::stod(priceStr);
+            int size = std::stoi(sizeStr);
+            char side = sideStr[0];
+            long long sequence = std::stoll(sequenceStr);
+
+            trades.emplace_back(
+                timestamp,
+                symbol,
+                price,
+                size,
+                side,
+                sequence
+            );
+        }
+        catch (const std::exception&) {
+            continue;
+        }
     }
-
-
     return trades;
 }

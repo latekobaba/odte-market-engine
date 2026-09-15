@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <vector>
+#include <chrono>
+
 #include "OptionTrade.h"
 #include "MarketDataEngine.h"
 #include "ETFTradeParser.h"
@@ -102,25 +104,59 @@ int main() {
 
     ETFTradeParser parser;
 
+    auto parseStart = std::chrono::high_resolution_clock::now();
+
     std::vector<ETFTrade> etfTrades =
-        parser.parseFile("data/etf_trades_test.csv");
+        parser.parseFile("data/etf_trades_large.csv");
+
+    auto parseEnd = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> parseTime =
+        parseEnd - parseStart;
 
     std::cout << "\nParsed ETF Trades: " << etfTrades.size() << '\n';
 
+    std::cout << "ETF Parse Time: "
+          << parseTime.count()
+          << " seconds\n";
 
+    double parseThroughput =
+    etfTrades.size() / parseTime.count();
+
+    std::cout << "ETF Parse Throughput: "
+              << parseThroughput
+              << " trades/second\n";
+
+    /*
     for (const ETFTrade& trade : etfTrades) {
         trade.print();
         std::cout << '\n';
     }
+*/
 
     ETFBarAggregator aggregator;
+
+    auto aggregationStart =
+        std::chrono::high_resolution_clock::now();
 
     std::vector<ETFBar> bars =
         aggregator.aggregate(etfTrades);
 
+    auto aggregationEnd =
+        std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> aggregationTime =
+        aggregationEnd - aggregationStart;
+
+
     std::cout << "\n5-Minute ETF Bars: "
               << bars.size()
               << "\n\n";
+
+    std::cout << "ETF Aggregation Time: "
+          << aggregationTime.count()
+          << " seconds\n\n";
+
 
     for (const ETFBar& bar : bars) {
         bar.print();
