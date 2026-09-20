@@ -1,32 +1,48 @@
-
 #include "OptionTrade.h"
 
 OptionTrade::OptionTrade(
-    long long timestamp,
-    const std::string &symbol,
+    const std::string& timestamp,
+    const std::string& symbol,
+    const std::string& expiration,
     double strike,
     char optionType,
     double price,
     int size,
-    double underlyingPrice)
-
-: timestamp(timestamp),
-  symbol(symbol),
-  strike(strike),
-  optionType(optionType),
-  price(price),
-  size(size),
-  underlyingPrice(underlyingPrice)
-
+    double bestBid,
+    double bestAsk,
+    double impliedVolatility,
+    double delta,
+    double gamma,
+    double underlyingBid,
+    double underlyingAsk
+)
+    : timestamp(timestamp),
+      symbol(symbol),
+      expiration(expiration),
+      strike(strike),
+      optionType(optionType),
+      price(price),
+      size(size),
+      bestBid(bestBid),
+      bestAsk(bestAsk),
+      impliedVolatility(impliedVolatility),
+      delta(delta),
+      gamma(gamma),
+      underlyingBid(underlyingBid),
+      underlyingAsk(underlyingAsk)
 {
 }
 
-long long OptionTrade::getTimestamp() const {
+const std::string& OptionTrade::getTimestamp() const {
     return timestamp;
 }
 
 const std::string& OptionTrade::getSymbol() const {
     return symbol;
+}
+
+const std::string& OptionTrade::getExpiration() const {
+    return expiration;
 }
 
 double OptionTrade::getStrike() const {
@@ -45,12 +61,40 @@ int OptionTrade::getSize() const {
     return size;
 }
 
+double OptionTrade::getBestBid() const {
+    return bestBid;
+}
+
+double OptionTrade::getBestAsk() const {
+    return bestAsk;
+}
+
+double OptionTrade::getImpliedVolatility() const {
+    return impliedVolatility;
+}
+
+double OptionTrade::getDelta() const {
+    return delta;
+}
+
+double OptionTrade::getGamma() const {
+    return gamma;
+}
+
+double OptionTrade::getUnderlyingBid() const {
+    return underlyingBid;
+}
+
+double OptionTrade::getUnderlyingAsk() const {
+    return underlyingAsk;
+}
+
 double OptionTrade::getUnderlyingPrice() const {
-    return underlyingPrice;
+    return (underlyingBid + underlyingAsk) / 2.0;
 }
 
 double OptionTrade::getMoneyness() const {
-    return underlyingPrice / strike;
+    return getUnderlyingPrice() / strike;
 }
 
 double OptionTrade::getNotional() const {

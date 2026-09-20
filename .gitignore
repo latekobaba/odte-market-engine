@@ -7,3 +7,7 @@ build/
 .DS_Store
 learning-notes/
 data/etf_trades_large.csv
+data/cboe_options_sample.csv
+data/cboe_spy_qqq_0dte.csv
+data/spy_tbbo_2023-01-03.csv
+perf.data
